@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <a href="kttrenlop.css"></a>
+    <script src="kiemtratrenlop.js"></script>
+  </head>
+  <body>
+    <form>
+      <div>
+        <div>
+          Họ Và Tên<input
+            type="text"
+            placeholder="vui lòng nhập tên"
+            class="name"
+          />
+        </div>
+        <br />
+        <div>
+          Email<input
+            type="text"
+            placeholder="vui lòng nhập email"
+            class="email"
+          />
+        </div>
+        <br />
+        <div>
+          Số điện thoại<input
+            type="text"
+            placeholder="vui lòng nhập số điện thoại"
+            class="phone"
+          />
+        </div>
+        <br />
+        <div>
+          Quê Quán<input
+            type="text"
+            placeholder="vui lòng nhập địa chỉ quê quán"
+            class="address"
+          />
+        </div>
+        <br />
+
+        <div><button class="btnCreate">Lưu lại</button></div>
+      </div>
+    </form>
+    <table border="1">
+      <caption>
+        Danh sách sinh viên
+      </caption>
+      <thead>
+        <th>#</th>
+        <th>Họ tên</th>
+        <th>Email</th>
+        <th>Số điện thoại</th>
+        <th>Địa chỉ</th>
+        <th>Hành động</th>
+      </thead>
+      <tbody class="tableBody"></tbody>
+    </table>
+
+    <script>
+      let btnCrearte = document.getElementById("btnCreate");
+      btnCreate.addEventListener("click", function () {
+        let name = document.getElementById("name").value;
+        let listProduct = JSON.parse(localStorage.getItem("listProduct"));
+        let exist = false;
+        if (listProduct != null) {
+          for (const product of listProduct) {
+            if (product.name == name) {
+              exist = true;
+              break;
+            }
+          }
+        }
+        if (exist) {
+          editProduct();
+        } else {
+          createProduct();
+        }
+      });
+      function createProduct() {
+        let listProduct = JSON.parse(localStorage.getItem("listProduct"));
+        if (listProduct == null) {
+          listProduct = [];
+        }
+
+        let name = document.getElementById("name").value;
+        let email = document.getElementById("email").value;
+        let phone = parseFloat(document.getElementById("price").value);
+        let address = parseFloat(document.getElementById("address").value);
+
+        let productNew = {
+          name: namne,
+          email: email,
+          phone: phone,
+          address: address,
+        };
+
+        listProduct.push(productNew);
+
+        localStorage.setItem("listProduct", JSON.stringify(listProduct));
+
+        readListProduct();
+      }
+
+      function readListProduct() {
+        let listProduct = JSON.parse(localStorage.getItem("listProduct"));
+        if (listProduct == null) {
+          listProduct = [];
+        }
+        let tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = "";
+        product.forEach((product, index) => {
+          tableBody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${product.name}</td>
+                        <td>${product.email}</td>
+                        <td>${product.phone}</td>
+                        <td>${product.address}</td>
+                        <button onclick="updateProduct('${
+                          product.name
+                        }')">Edit</button>
+                        <button onclick="deleteProduct('${
+                          product.name
+                        }')">Delete</button>
+                    </tr>`;
+        });
+      }
+      readListProduct();
+      function updateProduct(name) {
+        let listProduct = JSON.parse(localStorage.getItem("listProduct"));
+
+        let productUpdate = listProduct.filter((product) => {
+          if (product.name == name) {
+            return product;
+          }
+        });
+
+        document.getElementById("name").value = productUpdate[0].name;
+        document.getElementById("email").value = productUpdate[0].email;
+        document.getElementById("phone").value = productUpdate[0].phone;
+        document.getElementById("address").value = productUpdate[0].addredss;
+      }
+      function editProduct() {
+        let listProduct = JSON.parse(localStorage.getItem("listProduct"));
+
+        let name = document.getElementById("name").value;
+        let email = document.getElementById("email").value;
+        let phone = parseFloat(document.getElementById("phone").value);
+        let address = document.getElementById("address").value;
+
+        let listProductUpdate = listProduct.map((product) => {
+          if (product.name == name) {
+            product.email = email;
+            product.phone = phone;
+            product.address = address;
+          }
+          return product;
+        });
+
+        localStorage.setItem("listProduct", JSON.stringify(listProductUpdate));
+
+        readListProduct();
+      }
+
+      function deleteProduct(name) {
+        let listProduct = JSON.parse(localStorage.getItem("listProduct"));
+
+        for (let i = 0; i < listProduct.length; i++) {
+          if (listProduct[i].name == name) {
+            listProduct.splice(i, 1);
+            break;
+          }
+        }
+        localStorage.setItem("listProduct", JSON.stringify(listProduct));
+
+        readListProduct();
+      }
+    </script>
+  </body>
+</html>
